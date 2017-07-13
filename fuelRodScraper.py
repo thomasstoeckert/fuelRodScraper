@@ -30,7 +30,7 @@ resorts = [
     }
 ]
 
-dpfrl_server_url = "http://thomasstoeckert.pythonanywhere.com/fuelrod_post/"
+dpfrl_server_url = "insert_webserver_here"
 
 names_xpath = "//div[@class='textContainer']/div/text()"
 coords_xpath = "//div[@class='textContainer']/parent::div/@data-id"
@@ -46,7 +46,7 @@ def scrape(url, label):
     browser = ""
 
     def wait_for(condition_fn, error_message, timeout_seconds):
-        print "Waiting for page to initalize..."
+        print "Waiting for page to initalize.."
         start = time.time()
         time_count = 0
         while time.time() - start < timeout_seconds:

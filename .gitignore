@@ -11,6 +11,3 @@ geckodriver.log
 
 #Ignore my private key for god's sake
 private_key.txt
-
-#Ignore the filter
-.gitattributes
