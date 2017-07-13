@@ -30,10 +30,17 @@ resorts = [
     }
 ]
 
-dpfrl_server_url = "insert_webserver_here"
+dpfrl_server_url = "http://thomasstoeckert.pythonanywhere.com/fuelrod_post/"
 
 names_xpath = "//div[@class='textContainer']/div/text()"
 coords_xpath = "//div[@class='textContainer']/parent::div/@data-id"
+
+def match_description(label):
+    descriptions = json.loads(open("descriptions.json").read())
+    if(label in descriptions):
+        return descriptions[label]
+    else:
+        return "Ask a Cast Member for the location of this Kiosk"
 
 def scrape(url, label):
     browser = ""
@@ -104,7 +111,8 @@ def scrape(url, label):
         for i in range(len(names_formatted)):
             entry = {
                 'location': names_formatted[i],
-                'coords': coords_formatted[i]
+                'coords': coords_formatted[i],
+                'desc': match_description(names_formatted[i])
             }
             list_formatted.append(entry)
         
@@ -135,6 +143,7 @@ all_builder = {
     "label": "all_resorts",
     "lists": []
 }
+
 for resort in resorts:
     print bcolors.HEADER + "FuelRodScraper scraping %s" % (resort['label']) + bcolors.ENDC
     all_builder["lists"].append(scrape(resort['url'], resort['label']))

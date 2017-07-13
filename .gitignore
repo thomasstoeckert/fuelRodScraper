@@ -1,5 +1,6 @@
 # Ignore saved JSON files
 *.json
+!descriptions.json
 
 #Ignore geckodriver and logs
 geckodriver
