@@ -88,7 +88,11 @@ def scrape(url, label):
         # Format Names
         names_formatted = []
         for name in names_raw:
-            names_formatted.append(" ".join(name.split()[6:]))
+            # This is the trimmed, split name of the kiosk
+            split_name = name.split()[6:]
+            # Then we capitalize the first item in the name
+            split_name[0] = split_name[0].capitalize()
+            names_formatted.append(" ".join(split_name))
         
         # Format Coords
         coords_formatted = []
