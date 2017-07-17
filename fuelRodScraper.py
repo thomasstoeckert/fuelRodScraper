@@ -32,8 +32,14 @@ resorts = [
 
 dpfrl_server_url = "insert_webserver_here"
 
-names_xpath = "//div[@class='textContainer']/div/text()"
-coords_xpath = "//div[@class='textContainer']/parent::div/@data-id"
+#The first xpath gets each section
+first_xpath = "//div[@class='nodeContainer']"
+#The second xpath gets the section title
+second_xpath = "./div/div[@class='title']/text()"
+#The third xpath gets the kiosks
+third_xpath = ".//div[@class='textContainer']/div/text()"
+#And the fourth gets the coords
+fourth_xpath = ".//div[@class='node child']/@data-id"
 
 def match_description(label):
     descriptions = json.loads(open("descriptions.json").read())
@@ -89,36 +95,38 @@ def scrape(url, label):
             browser.quit()
 
         tree = html.fromstring(htmlString)
-        names_raw = tree.xpath(names_xpath)
-        coords_raw = tree.xpath(coords_xpath)
-
-        # Format Names
-        names_formatted = []
-        for name in names_raw:
-            # This is the trimmed, split name of the kiosk
-            split_name = name.split()[6:]
-            # Then we capitalize the first item in the name
-            split_name[0] = split_name[0].capitalize()
-            names_formatted.append(" ".join(split_name))
-        
-        # Format Coords
-        coords_formatted = []
-        for coord in coords_raw:
-            pair = coord.split(";")[2:]
-            coords_formatted.append(pair)
-        
-        list_formatted = []
-        for i in range(len(names_formatted)):
-            entry = {
-                'location': names_formatted[i],
-                'coords': coords_formatted[i],
-                'desc': match_description(names_formatted[i])
-            }
-            list_formatted.append(entry)
+        section = tree.xpath(first_xpath)
+        fancy_listy = []
+        for park in section:
+            tag = park.xpath(second_xpath)[0]
+            print tag
+            name_entries = park.xpath(third_xpath)
+            print name_entries
+            formatted_names =[]
+            for name in name_entries:
+                split_name = name.split()[6:]
+                split_name[0] = split_name[0].capitalize()
+                formatted_names.append(" ".join(split_name))
+            
+            coord_entries = park.xpath(fourth_xpath)
+            print coord_entries
+            formatted_coords = []
+            for coord in coord_entries:
+                pair = coord.split(";")[2:]
+                formatted_coords.append(pair)
+            
+            for i in range(len(formatted_names)):
+                kiosk = {
+                    'location': formatted_names[i],
+                    'coords': formatted_coords[i],
+                    'desc': match_description(formatted_names[i]),
+                    'tag': tag
+                }
+                fancy_listy.append(kiosk)
         
         final_formatted = {
             'resort': label,
-            'kiosks': list_formatted
+            'kiosks': fancy_listy
         }
         return final_formatted
 
