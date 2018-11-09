@@ -2,8 +2,6 @@ About FuelRodScraper.py
 =========================
 FuelRodScraper.py is the scraper for finding updated
 Fuel Rod Kiosk locations at Walt Disney World and Disneyland.
-One app that uses this is [here,](http://github.com/thomasstoeckert/fuelRodLocator)
-an app to display the neaest location of a kiosk on Pebble Smartwatches.
 
 How does it work?
 ---------------
